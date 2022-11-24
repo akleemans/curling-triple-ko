@@ -1,0 +1,59 @@
+<div class="container">
+  <h2>Curling Triple Knockout Simulation</h2>
+
+  <div class="sections">
+    <section>
+      <h3>Tournament definition</h3>
+      <form class="tournament-form">
+        <mat-form-field class="full-width">
+          <mat-label>Enter tournament definition here</mat-label>
+          <textarea matInput [(ngModel)]="tournamentDefinition" name="tournamenDefinition"
+                    rows="10"></textarea>
+        </mat-form-field>
+      </form>
+
+      <button mat-raised-button color="primary" (click)="rate()" [disabled]="waitingForRequest">
+        Calculate score
+      </button>
+      <button mat-raised-button color="primary" (click)="optimize()" [disabled]="waitingForRequest">
+        Optimize
+      </button>
+      <button mat-raised-button color="warn" (click)="cancelOptimize()"
+              [disabled]="mode == modeEnum.Rate || ! waitingForRequest">
+        Cancel optimizing
+      </button>
+    </section>
+
+    <section *ngIf="mode === modeEnum.Rate">
+      <mat-spinner *ngIf="waitingForRequest"></mat-spinner>
+
+      <div *ngIf="score">
+        <b>Score: {{score}}</b> (expected number of double encounters)
+      </div>
+
+      <div *ngIf="score">
+        Percentage distribution:
+        <canvas baseChart
+                [data]="barChartData"
+                [options]="barChartOptions"
+                [legend]="false"
+                [type]="'bar'">
+        </canvas>
+      </div>
+    </section>
+
+    <section *ngIf="mode === modeEnum.Optimize">
+      <p class="round-progress">
+        <span>Round: {{round}} / 100'000</span>
+        <mat-spinner *ngIf="waitingForRequest" diameter="20" mode="indeterminate"></mat-spinner>
+      </p>
+
+      <p *ngIf="score">
+        <b>Current best score: {{score}}</b> (expected number of double encounters)
+      </p>
+
+      <span>Current best definition:</span>
+      <pre *ngIf="bestDefinition">{{bestDefinition}}</pre>
+    </section>
+  </div>
+</div>
