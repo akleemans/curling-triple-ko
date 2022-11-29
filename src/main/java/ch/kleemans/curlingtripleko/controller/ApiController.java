@@ -21,7 +21,8 @@ public class ApiController {
   @PostMapping("/api/rate")
   public RateResponseDto rate(@RequestBody RateRequestDto rateRequestDto) {
     var list = Util.stringToList(rateRequestDto.getTournamentDefinition());
-    var result = tournamentService.rateTournamentDefinition(list, rateRequestDto.getGamesToPlay());
+    var result =
+        tournamentService.rateTournamentDefinition(list, rateRequestDto.getTournamentsToPlay());
     return RateResponseDto.builder()
         .score(result.getScore())
         .distribution(result.getDistribution())
@@ -34,7 +35,8 @@ public class ApiController {
 
     var list = Util.stringToList(dto.getTournamentDefinition());
     tournamentService
-        .startOptimizingTournament(list, dto.getTournamentsToSimulate(), dto.getSearchDepth())
+        .startOptimizingTournament(
+            list, dto.getOptimizationRounds(), dto.getTournamentsToPlay(), dto.getSearchDepth())
         .handle(
             (result, throwable) -> {
               if (throwable != null) {

@@ -1,5 +1,9 @@
 export class OptimizeRequest {
-  tournamentDefinition: string = '';
-  tournamentsToSimulate: number = 100_000;
-  searchDepth: number = 30;
+  public constructor(
+    public tournamentDefinition: string,
+    public tournamentsToPlay: number,
+    public optimizationRounds: number,
+    public searchDepth: number
+  ) {
+  }
 }

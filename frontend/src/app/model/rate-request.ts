@@ -1,4 +1,7 @@
 export class RateRequest {
-  tournamentDefinition: string = '';
-  gamesToPlay: number = 1_000_000;
+  public constructor(
+    public tournamentDefinition: string,
+    public tournamentsToPlay: number
+  ) {
+  }
 }

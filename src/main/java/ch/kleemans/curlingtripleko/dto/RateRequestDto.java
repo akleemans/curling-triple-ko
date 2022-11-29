@@ -7,5 +7,5 @@ import lombok.Value;
 @Builder
 public class RateRequestDto {
   String tournamentDefinition;
-  int gamesToPlay;
+  int tournamentsToPlay;
 }

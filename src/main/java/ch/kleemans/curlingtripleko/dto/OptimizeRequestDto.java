@@ -7,6 +7,7 @@ import lombok.Value;
 @Builder
 public class OptimizeRequestDto {
   String tournamentDefinition;
-  int tournamentsToSimulate;
+  int tournamentsToPlay;
+  int optimizationRounds;
   int searchDepth;
 }

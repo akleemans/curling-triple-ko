@@ -12,39 +12,114 @@
         </mat-form-field>
       </form>
 
-      <button mat-raised-button color="primary" (click)="rate()" [disabled]="waitingForRequest">
-        Calculate score
-      </button>
-      <button mat-raised-button color="primary" (click)="optimize()" [disabled]="waitingForRequest">
-        Optimize
-      </button>
-      <button mat-raised-button color="warn" (click)="cancelOptimize()"
-              [disabled]="mode == modeEnum.Rate || ! waitingForRequest">
-        Cancel optimizing
-      </button>
+      <div>
+        <h3>Calculate score</h3>
+        <mat-form-field appearance="outline">
+          <mat-label># of tournaments to play</mat-label>
+          <mat-select [(value)]="tournamentsToPlayScore">
+            <mat-option [value]="100000">100'000</mat-option>
+            <mat-option [value]="200000">200'000</mat-option>
+            <mat-option [value]="500000">500'000</mat-option>
+            <mat-option [value]="1000000">1'000'000</mat-option>
+            <mat-option [value]="2000000">2'000'000</mat-option>
+            <mat-option [value]="5000000">5'000'000</mat-option>
+            <mat-option [value]="10000000">10'000'000</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="rate()" [disabled]="waitingForRequest">
+          Calculate score
+        </button>
+      </div>
+
+      <div>
+        <h3>Optimize</h3>
+
+        <mat-form-field appearance="outline">
+          <mat-label># of tournaments / round</mat-label>
+          <mat-select [(value)]="tournamentsToPlayOptimize">
+            <mat-option [value]="10000">10'000</mat-option>
+            <mat-option [value]="20000">20'000</mat-option>
+            <mat-option [value]="50000">50'000</mat-option>
+            <mat-option [value]="100000">100'000</mat-option>
+            <mat-option [value]="200000">200'000</mat-option>
+            <mat-option [value]="500000">500'000</mat-option>
+            <mat-option [value]="1000000">1'000'000</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label># of optimization rounds</mat-label>
+          <mat-select [(value)]="optimizationRounds">
+            <mat-option [value]="10000">10'000</mat-option>
+            <mat-option [value]="20000">20'000</mat-option>
+            <mat-option [value]="50000">50'000</mat-option>
+            <mat-option [value]="100000">100'000</mat-option>
+            <mat-option [value]="200000">200'000</mat-option>
+            <mat-option [value]="500000">500'000</mat-option>
+            <mat-option [value]="1000000">1'000'000</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <br>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Search depth</mat-label>
+          <mat-select [(value)]="searchDepth">
+            <mat-option [value]="0">0</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="15">15</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            <mat-option [value]="25">25</mat-option>
+            <mat-option [value]="30">30</mat-option>
+            <mat-option [value]="35">35</mat-option>
+            <mat-option [value]="40">40</mat-option>
+            <mat-option [value]="45">45</mat-option>
+            <mat-option [value]="50">50</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="optimize()"
+                [disabled]="waitingForRequest">
+          Optimize
+        </button>
+        <button mat-raised-button color="warn" (click)="cancelOptimize()"
+                [disabled]="mode == modeEnum.Rate || ! waitingForRequest">
+          Cancel
+        </button>
+      </div>
     </section>
 
     <section *ngIf="mode === modeEnum.Rate">
       <mat-spinner *ngIf="waitingForRequest"></mat-spinner>
 
       <div *ngIf="score">
-        <b>Score: {{score}}</b> (expected number of double encounters)
+        <b>Score: {{score}}</b> (expected number of double encounters) <br>
+        <span>Played rounds: {{tournamentsToPlayScore}}</span>
       </div>
 
       <div *ngIf="score">
-        Percentage distribution:
+        <p>Chart:</p>
         <canvas baseChart
                 [data]="barChartData"
                 [options]="barChartOptions"
                 [legend]="false"
                 [type]="'bar'">
         </canvas>
+
+        <p>Percentage distribution:</p>
+        <ul>
+          <li *ngFor="let label of this.barChartData.labels; let i = index">
+            {{label}}: {{this.barChartData.datasets[0].data[i]}}
+          </li>
+        </ul>
       </div>
     </section>
 
     <section *ngIf="mode === modeEnum.Optimize">
       <p class="round-progress">
-        <span>Round: {{round}} / 100'000</span>
+        <span>Round: {{round}} / {{optimizationRounds}}</span>
         <mat-spinner *ngIf="waitingForRequest" diameter="20" mode="indeterminate"></mat-spinner>
       </p>
 

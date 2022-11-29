@@ -14,15 +14,11 @@ export class ApiService {
   public constructor(private readonly httpClient: HttpClient) {
   }
 
-  public rate(tournamentDefinition: string): Observable<RateResponse> {
-    const rateRequest = new RateRequest();
-    rateRequest.tournamentDefinition = tournamentDefinition;
+  public rate(rateRequest: RateRequest): Observable<RateResponse> {
     return this.httpClient.post<RateResponse>('http://localhost:8080/api/rate', rateRequest);
   }
 
-  public optimize(tournamentDefinition: string): Observable<String> {
-    const optimizeRequest = new OptimizeRequest();
-    optimizeRequest.tournamentDefinition = tournamentDefinition;
+  public optimize(optimizeRequest: OptimizeRequest): Observable<String> {
     return this.httpClient.post<String>('http://localhost:8080/api/optimize', optimizeRequest);
   }
 

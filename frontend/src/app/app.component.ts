@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {ChartConfiguration} from 'chart.js';
 import {ApiService} from './api.service';
+import {OptimizeRequest} from './model/optimize-request';
+import {RateRequest} from './model/rate-request';
 
 enum Mode {
   Rate,
@@ -18,6 +20,10 @@ export class AppComponent {
   public mode = Mode.Rate;
   public score: number | undefined;
   public waitingForRequest = false;
+  public tournamentsToPlayScore = 1000000;
+  public tournamentsToPlayOptimize = 100000;
+  public optimizationRounds = 100000;
+  public searchDepth = 30;
 
   public bestDefinition = '';
   public round = 0;
@@ -39,7 +45,7 @@ export class AppComponent {
     this.score = undefined;
     this.waitingForRequest = true;
     this.mode = Mode.Rate;
-    this.apiService.rate(this.tournamentDefinition).subscribe(response => {
+    this.apiService.rate(new RateRequest(this.tournamentDefinition, this.tournamentsToPlayScore)).subscribe(response => {
       this.score = response.score;
 
       this.barChartData.labels = [];
@@ -61,13 +67,17 @@ export class AppComponent {
 
     this.waitingForRequest = true;
     this.mode = Mode.Optimize;
-    this.apiService.optimize(this.tournamentDefinition).subscribe(response => console.log(response))
+    const optimizeRequest = new OptimizeRequest(this.tournamentDefinition, this.tournamentsToPlayOptimize,
+      this.optimizationRounds, this.searchDepth);
+    this.apiService.optimize(optimizeRequest)
+    .subscribe(response => console.log('Optimize request succeeded:', response))
     setTimeout(() => this.pollOptimize(), 5000);
   }
 
   public cancelOptimize(): void {
     this.waitingForRequest = false;
-    this.apiService.cancelOptimize().subscribe(response => console.log(response))
+    this.apiService.cancelOptimize()
+    .subscribe(response => console.log('Cancel optimize request succeeded:', response))
   }
 
   private pollOptimize(): void {

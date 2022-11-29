@@ -38,14 +38,14 @@ public class TournamentService {
 
   @Async
   public CompletableFuture<Void> startOptimizingTournament(
-      List<String> list, int tournamentsToSimulate, int searchDepth) {
+      List<String> list, int optimizationRounds, int tournamentsToPlay, int searchDepth) {
     System.out.println(
-        "Starting optimization for " + tournamentsToSimulate + " tournaments to simulate.");
+        "Starting optimization for " + optimizationRounds + " tournaments to simulate.");
     highScore = 10.0f;
     bestDefinition = Util.listToString(list);
     round = 0;
 
-    for (int i = 0; i < tournamentsToSimulate; i++) {
+    for (int i = 0; i < optimizationRounds; i++) {
       if (round == -1) {
         System.out.println("Cancelling job.");
         break;
@@ -71,7 +71,7 @@ public class TournamentService {
       TournamentSimulation tournamentSimulation;
       float score;
       try {
-        tournamentSimulation = new TournamentSimulation(tournamentDefinition, 100_000);
+        tournamentSimulation = new TournamentSimulation(tournamentDefinition, tournamentsToPlay);
         score = tournamentSimulation.play().getScore();
       } catch (IllegalArgumentException e) {
         continue;
